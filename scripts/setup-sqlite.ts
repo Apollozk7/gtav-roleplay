@@ -1,17 +1,15 @@
 import { PrismaClient } from '@prisma/client'
+import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient()
 
-async function deployDatabase() {
+async function setupSQLite() {
   try {
-    console.log('🚀 Fazendo deploy do banco de dados PostgreSQL...')
+    console.log('🚀 Configurando banco SQLite...')
     
     // Testar conexão
     await prisma.$connect()
-    console.log('✅ Conexão com PostgreSQL estabelecida!')
-    
-    // Executar migrações (criar tabelas)
-    console.log('📊 Criando tabelas...')
+    console.log('✅ Conexão com SQLite estabelecida!')
     
     // Criar usuário admin se não existir
     const existingAdmin = await prisma.user.findUnique({
@@ -19,7 +17,6 @@ async function deployDatabase() {
     })
 
     if (!existingAdmin) {
-      const bcrypt = require('bcryptjs')
       const hashedPassword = await bcrypt.hash('admin123', 12)
       
       await prisma.user.create({
@@ -33,6 +30,8 @@ async function deployDatabase() {
       })
       
       console.log('✅ Usuário admin criado!')
+      console.log('   - Email: admin@nonpc.network')
+      console.log('   - Senha: admin123')
     } else {
       console.log('ℹ️  Usuário admin já existe')
     }
@@ -79,14 +78,50 @@ async function deployDatabase() {
       console.log('ℹ️  Serviços já existem')
     }
 
-    console.log('🎉 Deploy do banco concluído com sucesso!')
+    // Criar contatos padrão se não existirem
+    const existingContacts = await prisma.contact.count()
+    
+    if (existingContacts === 0) {
+      const defaultContacts = [
+        {
+          type: 'DISCORD' as const,
+          label: 'Discord Principal',
+          value: 'npcnetwork#1234',
+          description: 'Canal principal para comunicação'
+        },
+        {
+          type: 'TELEGRAM' as const,
+          label: 'Telegram',
+          value: '@npcnetwork',
+          description: 'Grupo do Telegram'
+        },
+        {
+          type: 'PHONE' as const,
+          label: 'WhatsApp',
+          value: '+55 11 99999-9999',
+          description: 'Contato direto via WhatsApp'
+        }
+      ]
+
+      for (const contact of defaultContacts) {
+        await prisma.contact.create({
+          data: contact
+        })
+      }
+      
+      console.log('✅ Contatos padrão criados!')
+    } else {
+      console.log('ℹ️  Contatos já existem')
+    }
+
+    console.log('🎉 Configuração do SQLite concluída com sucesso!')
     
   } catch (error) {
-    console.error('❌ Erro no deploy:', error)
+    console.error('❌ Erro na configuração:', error)
     throw error
   } finally {
     await prisma.$disconnect()
   }
 }
 
-deployDatabase()
+setupSQLite()
