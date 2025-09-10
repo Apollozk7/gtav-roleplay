@@ -15,6 +15,7 @@
     "setup-postgresql": "tsx scripts/setup-postgresql.ts",
     "test-connection": "tsx scripts/test-connection.ts",
     "test-postgresql": "tsx scripts/test-postgresql.ts",
+    "deploy-vercel": "tsx scripts/deploy-vercel.ts",
     "change-admin-password": "tsx scripts/change-admin-password.ts",
     "seed-contacts": "tsx scripts/seed-contacts.ts",
     "generate-secret": "tsx scripts/generate-secret.ts",

@@ -45,9 +45,44 @@ git commit -m "Fix: Configure PostgreSQL for Vercel"
 git push
 ```
 
-### 4. Verificar o Deploy
+**Nota**: O build pode falhar na primeira vez porque o banco ainda não foi criado. Isso é normal!
 
-Após o deploy, o banco PostgreSQL será criado automaticamente e você poderá:
+### 4. Executar Migrações do Banco
+
+Após o deploy, você precisa executar as migrações do banco:
+
+**Opção A: Script Automatizado (Mais Fácil)**
+```bash
+# Executa todo o processo automaticamente
+npm run deploy-vercel
+```
+
+**Opção B: Manual via Vercel CLI**
+```bash
+# Instalar Vercel CLI
+npm i -g vercel
+
+# Fazer login na Vercel
+vercel login
+
+# Baixar variáveis de ambiente
+vercel env pull .env.local
+
+# Executar migrações
+npx prisma db push
+
+# Configurar dados iniciais
+npm run setup-postgresql
+```
+
+**Opção C: Via Dashboard da Vercel**
+1. Acesse o dashboard da Vercel
+2. Vá em "Functions" → "View Function Logs"
+3. Execute um comando via terminal integrado
+
+### 5. Verificar o Deploy
+
+Após executar as migrações, você poderá:
 - ✅ Criar contas normalmente
 - ✅ Fazer login
 - ✅ Usar todas as funcionalidades
@@ -106,8 +141,19 @@ git push origin main
 
 ### Para configurar dados iniciais em produção:
 ```bash
-# Após o deploy, execute via Vercel CLI
+# 1. Instalar Vercel CLI (se não tiver)
+npm i -g vercel
+
+# 2. Fazer login na Vercel
+vercel login
+
+# 3. Baixar variáveis de ambiente
 vercel env pull .env.local
+
+# 4. Executar migrações do banco
+npx prisma db push
+
+# 5. Configurar dados iniciais
 npm run setup-postgresql
 ```
 

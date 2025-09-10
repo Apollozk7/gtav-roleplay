@@ -6,5 +6,5 @@
     }
   },
   "buildCommand": "npm run build",
-  "installCommand": "npm install && npx prisma generate && npx prisma db push"
+  "installCommand": "npm install && npx prisma generate"
 }
