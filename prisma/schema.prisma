@@ -1,0 +1,166 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(cuid())
+  username    String   @unique
+  email       String   @unique
+  password    String
+  cashTapUser String   @unique
+  role        Role     @default(USER)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  events      Event[]
+  bets        Bet[]
+  serviceRequests ServiceRequest[]
+
+  @@map("users")
+}
+
+model Event {
+  id                String   @id @default(cuid())
+  title             String
+  description       String
+  type              String
+  status            String   @default("ACTIVE")
+  location          String?
+  locationRevealTime DateTime?
+  startTime         DateTime
+  endTime           DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  creatorId         String
+  creator           User     @relation(fields: [creatorId], references: [id])
+  participants      Participant[]
+  bets              Bet[]
+
+  @@map("events")
+}
+
+model Participant {
+  id        String   @id @default(cuid())
+  codename  String
+  odds      Float
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  // Relations
+  eventId   String
+  event     Event    @relation(fields: [eventId], references: [id])
+  bets      Bet[]
+
+  @@map("participants")
+}
+
+model Bet {
+  id           String   @id @default(cuid())
+  amount       Int
+  potentialWin Int
+  status       BetStatus @default(PENDING)
+  proofLink    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  userId       String
+  user         User       @relation(fields: [userId], references: [id])
+  eventId      String
+  event        Event      @relation(fields: [eventId], references: [id])
+  participantId String
+  participant  Participant @relation(fields: [participantId], references: [id])
+
+  @@map("bets")
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  type        ServiceType
+  price       Int?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  serviceRequests ServiceRequest[]
+
+  @@map("services")
+}
+
+model ServiceRequest {
+  id        String   @id @default(cuid())
+  message   String?
+  status    ServiceRequestStatus @default(PENDING)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
+  serviceId String
+  service   Service @relation(fields: [serviceId], references: [id])
+
+  @@map("service_requests")
+}
+
+model Contact {
+  id          String   @id @default(cuid())
+  type        ContactType
+  label       String
+  value       String
+  isActive    Boolean  @default(true)
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("contacts")
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum BetStatus {
+  PENDING
+  CONFIRMED
+  PAID
+  CANCELLED
+}
+
+enum ServiceType {
+  TRANSPORT
+  THEFT
+  DISTRACTION
+  OTHER
+}
+
+enum ServiceRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  COMPLETED
+}
+
+enum ContactType {
+  PHONE
+  EMAIL
+  TELEGRAM
+  DISCORD
+  WHATSAPP
+  OTHER
+}

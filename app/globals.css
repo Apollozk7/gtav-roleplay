@@ -1,0 +1,332 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Updated color tokens for underground hacker aesthetic */
+  --background: #000000; /* Pure black for terminal background */
+  --foreground: #666666; /* Dark gray for most text - less bright */
+  --card: #0a0a0a; /* Barely visible dark cards */
+  --card-foreground: #555555; /* Darker gray text on cards */
+  --popover: #000000; /* Black popover background */
+  --popover-foreground: #666666; /* Dark gray popover text */
+  --primary: #333333; /* Very dark gray for primary actions */
+  --primary-foreground: #888888; /* Light gray text on dark buttons */
+  --secondary: #1a1a1a; /* Very dark gray for secondary elements */
+  --secondary-foreground: #666666; /* Dark gray text on secondary */
+  --muted: #0f0f0f; /* Almost black for muted areas */
+  --muted-foreground: #444444; /* Very dark gray for muted text */
+  --accent: #ff0000; /* Red for alerts and warnings */
+  --accent-foreground: #ffffff; /* White text on red */
+  --destructive: #cc0000; /* Darker red for destructive actions */
+  --destructive-foreground: #ffffff; /* White text on red */
+  --border: #222222; /* Very dark borders */
+  --input: #0a0a0a; /* Almost black input backgrounds */
+  --ring: #333333; /* Dark gray focus rings */
+  --chart-1: #444444; /* Dark gray for charts */
+  --chart-2: #666666; /* Medium gray for charts */
+  --chart-3: #888888; /* Light gray for charts */
+  --chart-4: #333333; /* Dark gray for charts */
+  --chart-5: #222222; /* Very dark gray for charts */
+  --radius: 0rem; /* No rounded corners for harsh aesthetic */
+  --sidebar: #000000; /* Black sidebar */
+  --sidebar-foreground: #666666; /* Dark gray sidebar text */
+  --sidebar-primary: #333333; /* Dark gray sidebar highlights */
+  --sidebar-primary-foreground: #888888; /* Light gray text */
+  --sidebar-accent: #ff0000; /* Red sidebar accents */
+  --sidebar-accent-foreground: #ffffff; /* White text on red */
+  --sidebar-border: #222222; /* Very dark sidebar borders */
+  --sidebar-ring: #333333; /* Dark gray focus rings */
+}
+
+.dark {
+  /* Dark mode uses same colors as root for consistent terminal theme */
+  --background: #000000;
+  --foreground: #666666;
+  --card: #0a0a0a;
+  --card-foreground: #555555;
+  --popover: #000000;
+  --popover-foreground: #666666;
+  --primary: #333333;
+  --primary-foreground: #888888;
+  --secondary: #1a1a1a;
+  --secondary-foreground: #666666;
+  --muted: #0f0f0f;
+  --muted-foreground: #444444;
+  --accent: #ff0000;
+  --accent-foreground: #ffffff;
+  --destructive: #cc0000;
+  --destructive-foreground: #ffffff;
+  --border: #222222;
+  --input: #0a0a0a;
+  --ring: #333333;
+  --chart-1: #444444;
+  --chart-2: #666666;
+  --chart-3: #888888;
+  --chart-4: #333333;
+  --chart-5: #222222;
+  --sidebar: #000000;
+  --sidebar-foreground: #666666;
+  --sidebar-primary: #333333;
+  --sidebar-primary-foreground: #888888;
+  --sidebar-accent: #ff0000;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #222222;
+  --sidebar-ring: #333333;
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-mono;
+  }
+
+  /* Enhanced terminal cursor with more realistic blinking */
+  .terminal-cursor::after {
+    content: "█";
+    animation: blink 1.5s infinite;
+    color: #444444;
+  }
+
+  @keyframes blink {
+    0%,
+    45% {
+      opacity: 1;
+    }
+    46%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  /* Enhanced glitch effect with more variations */
+  .glitch {
+    position: relative;
+    animation: glitch 4s infinite;
+  }
+
+  .glitch::before,
+  .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .glitch::before {
+    animation: glitch-1 1.2s infinite;
+    color: #330000;
+    z-index: -1;
+    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+  }
+
+  .glitch::after {
+    animation: glitch-2 1.2s infinite;
+    color: #003333;
+    z-index: -2;
+    clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+  }
+
+  @keyframes glitch {
+    0%,
+    100% {
+      transform: translate(0);
+    }
+    10% {
+      transform: translate(-2px, 2px);
+    }
+    20% {
+      transform: translate(-2px, -2px);
+    }
+    30% {
+      transform: translate(2px, 2px);
+    }
+    40% {
+      transform: translate(2px, -2px);
+    }
+    50% {
+      transform: translate(-1px, 2px);
+    }
+    60% {
+      transform: translate(-1px, -2px);
+    }
+    70% {
+      transform: translate(1px, 1px);
+    }
+    80% {
+      transform: translate(1px, -1px);
+    }
+    90% {
+      transform: translate(-1px, -1px);
+    }
+  }
+
+  @keyframes glitch-1 {
+    0%,
+    100% {
+      transform: translate(0);
+    }
+    10% {
+      transform: translate(3px, -2px);
+    }
+    20% {
+      transform: translate(-2px, 3px);
+    }
+    30% {
+      transform: translate(-3px, -2px);
+    }
+    40% {
+      transform: translate(2px, 3px);
+    }
+    50% {
+      transform: translate(1px, -1px);
+    }
+    60% {
+      transform: translate(-1px, 2px);
+    }
+    70% {
+      transform: translate(2px, 1px);
+    }
+    80% {
+      transform: translate(-2px, -1px);
+    }
+    90% {
+      transform: translate(1px, 2px);
+    }
+  }
+
+  @keyframes glitch-2 {
+    0%,
+    100% {
+      transform: translate(0);
+    }
+    10% {
+      transform: translate(-2px, -3px);
+    }
+    20% {
+      transform: translate(3px, -2px);
+    }
+    30% {
+      transform: translate(2px, 3px);
+    }
+    40% {
+      transform: translate(-3px, 2px);
+    }
+    50% {
+      transform: translate(-1px, -2px);
+    }
+    60% {
+      transform: translate(2px, -1px);
+    }
+    70% {
+      transform: translate(-1px, -2px);
+    }
+    80% {
+      transform: translate(1px, 3px);
+    }
+    90% {
+      transform: translate(-2px, 1px);
+    }
+  }
+
+  /* Added scan line effect for authentic terminal feel */
+  .scan-lines::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(transparent 50%, rgba(255, 255, 255, 0.005) 50%);
+    background-size: 100% 4px;
+    pointer-events: none;
+    animation: scan 0.2s linear infinite;
+  }
+
+  @keyframes scan {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 0 4px;
+    }
+  }
+
+  /* Added flicker effect for terminal authenticity */
+  .terminal-flicker {
+    animation: flicker 0.15s infinite linear;
+  }
+
+  @keyframes flicker {
+    0% {
+      opacity: 1;
+    }
+    98% {
+      opacity: 1;
+    }
+    99% {
+      opacity: 0.98;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  /* Matrix background positioning */
+  .matrix-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -10;
+    opacity: 0.05;
+  }
+}
